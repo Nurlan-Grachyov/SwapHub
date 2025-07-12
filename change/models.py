@@ -5,37 +5,37 @@ from django.utils.translation import gettext_lazy as _
 
 class ExchangeOffer(models.Model):
     STATUS_CHOICES = (
-        ('pending', _('Ожидает')),
-        ('accepted', _('Принято')),
-        ('declined', _('Отклонено'))
+        ("pending", _("Ожидает")),
+        ("accepted", _("Принято")),
+        ("declined", _("Отклонено")),
     )
 
     ad_sender = models.ForeignKey(
-        to='Product',  # Предположительно у вас есть модель Advertisement
-        related_name='offered_ads',
+        to="ads.Product",
+        related_name="offered_ads",
         on_delete=models.CASCADE,
-        verbose_name=_("Объявление отправителя")
+        verbose_name=_("Объявление отправителя"),
     )
 
     ad_receiver = models.ForeignKey(
-        to='Product',
-        related_name='received_offers',
+        to="ads.Product",
+        related_name="received_offers",
         on_delete=models.CASCADE,
-        verbose_name=_("Объявление получателя")
+        verbose_name=_("Объявление получателя"),
     )
 
     sender_user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        related_name='sent_exchange_offers',
+        related_name="sent_exchange_offers",
         on_delete=models.CASCADE,
-        verbose_name=_("Отправитель")
+        verbose_name=_("Отправитель"),
     )
 
     receiver_user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        related_name='received_exchange_offers',
+        related_name="received_exchange_offers",
         on_delete=models.CASCADE,
-        verbose_name=_("Получатель")
+        verbose_name=_("Получатель"),
     )
 
     comment = models.TextField(blank=True, verbose_name=_("Комментарий"))
@@ -43,11 +43,13 @@ class ExchangeOffer(models.Model):
     status = models.CharField(
         max_length=10,
         choices=STATUS_CHOICES,
-        default='pending',
-        verbose_name=_("Статус предложения")
+        default="pending",
+        verbose_name=_("Статус предложения"),
     )
 
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Дата создания"))
+    created_at = models.DateTimeField(
+        auto_now_add=True, verbose_name=_("Дата создания")
+    )
 
     updated_at = models.DateTimeField(auto_now=True, verbose_name=_("Дата обновления"))
 
@@ -56,4 +58,4 @@ class ExchangeOffer(models.Model):
         verbose_name_plural = _("Предложения обмена")
 
     def __str__(self):
-        return f'{self.ad_sender} -> {self.ad_receiver}'
+        return f"{self.ad_sender} -> {self.ad_receiver}"

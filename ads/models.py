@@ -15,17 +15,21 @@ class Product(models.Model):
     )
     title = models.CharField(max_length=255, verbose_name=_("Заголовок"))
     description = models.TextField(verbose_name=_("Описание"))
-    image_url = models.URLField(blank=True, null=True, verbose_name=_("URL изображения"))
+    image_url = models.URLField(
+        blank=True, null=True, verbose_name=_("URL изображения")
+    )
     category = models.CharField(max_length=100, verbose_name=_("Категория"))
     condition = models.CharField(
         max_length=50,
         choices=STATUS_CHOICES,
         default="new",
         verbose_name=_("Состояние"),
-        blank=True
+        blank=True,
     )
 
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Дата публикации"))
+    created_at = models.DateTimeField(
+        auto_now_add=True, verbose_name=_("Дата публикации")
+    )
 
     class Meta:
         ordering = ["-created_at"]
