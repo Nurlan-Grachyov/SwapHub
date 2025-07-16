@@ -7,3 +7,8 @@ class AdSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = "__all__"
+
+    def create(self, validated_data):
+        user = self.context['request'].user
+        product = Product.objects.create(user=user, **validated_data)
+        return product

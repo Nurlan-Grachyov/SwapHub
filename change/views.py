@@ -1,6 +1,5 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
-from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
@@ -30,25 +29,17 @@ class ChangeViewSet(ModelViewSet):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def update(self, request, *args, **kwargs):
-        """Обновляет существующее предложение об обмене."""
-        change = self.get_object()
+        obj = self.get_object()
 
-        if change.user != request.user:
-            raise PermissionDenied(
-                detail="У вас нет прав на редактирование этого предложение."
-            )
+        new_status = request.data.get('status')
 
-        serializer = self.get_serializer(
-            change, data=request.data.get("status"), partial=True
-        )
-        if serializer.is_valid():
-            serializer.save()
-            return Response(
-                {"message": "Предложение успешно обновлено.", "data": serializer.data},
-                status=status.HTTP_200_OK,
-            )
+        if new_status and new_status in dict(obj.STATUS_CHOICES):
+            obj.status = new_status
+            obj.save(update_fields=['status'])
+
+            return Response({"message": f"Статус успешно обновлен на {new_status}"}, status=status.HTTP_200_OK)
         else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"detail": "Можно обновить только статус."}, status=status.HTTP_400_BAD_REQUEST)
 
     def partial_update(self, request, *args, **kwargs):
         """Частично обновляет предложение."""
@@ -56,10 +47,6 @@ class ChangeViewSet(ModelViewSet):
 
     def destroy(self, request, *args, **kwargs):
         change = self.get_object()
-        if change.user != request.user:
-            raise PermissionDenied(
-                detail="У вас нет прав на удаление этого предложение."
-            )
         change.delete()
         return Response(
             {"message": "Предложение успешно удалено."},

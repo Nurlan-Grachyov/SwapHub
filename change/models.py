@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from rest_framework.exceptions import ValidationError
 
 
 class ExchangeOffer(models.Model):
@@ -45,6 +46,7 @@ class ExchangeOffer(models.Model):
         choices=STATUS_CHOICES,
         default="pending",
         verbose_name=_("Статус предложения"),
+        blank=True
     )
 
     created_at = models.DateTimeField(
@@ -56,6 +58,3 @@ class ExchangeOffer(models.Model):
     class Meta:
         verbose_name = _("Предложение обмена")
         verbose_name_plural = _("Предложения обмена")
-
-    def __str__(self):
-        return f"{self.ad_sender} -> {self.ad_receiver}"

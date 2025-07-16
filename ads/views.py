@@ -21,8 +21,7 @@ class AdsViewSet(ModelViewSet):
     filterset_class = AdsFilter
 
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-
+        serializer = self.get_serializer(data=request.data, context={"request": request})
         if serializer.is_valid():
             serializer.save()
             response_data = {

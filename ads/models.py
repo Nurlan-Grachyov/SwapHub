@@ -12,6 +12,7 @@ class Product(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         verbose_name=_("Пользователь"),
+        blank=True
     )
     title = models.CharField(max_length=255, verbose_name=_("Заголовок"))
     description = models.TextField(verbose_name=_("Описание"))
