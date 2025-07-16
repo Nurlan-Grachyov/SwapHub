@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 
 class CustomUser(AbstractUser):
@@ -7,8 +8,8 @@ class CustomUser(AbstractUser):
     The model for a user
     """
 
-    username = models.CharField(null=True, blank=True, verbose_name="username")
-    email = models.EmailField(unique=True, verbose_name="Email")
+    username = models.CharField(null=True, blank=True, verbose_name=_("Username"))
+    email = models.EmailField(unique=True, verbose_name=_("Email"))
     is_staff = models.BooleanField(blank=True, default=False)
 
     USERNAME_FIELD = "email"
@@ -31,8 +32,8 @@ class CustomUser(AbstractUser):
     )
 
     class Meta:
-        verbose_name = "Пользователь"
-        verbose_name_plural = "Пользователи"
+        verbose_name = _("Пользователь")
+        verbose_name_plural = _("Пользователи")
 
     def __str__(self):
         return self.email

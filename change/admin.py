@@ -1,3 +1,5 @@
 from django.contrib import admin
 
-# Register your models here.
+from change.models import ExchangeOffer
+
+admin.site.register(ExchangeOffer)
