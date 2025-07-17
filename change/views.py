@@ -1,5 +1,6 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
@@ -14,6 +15,8 @@ class ChangeViewSet(ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["sender_user", "receiver_user", "status"]
     filterset_class = ChangeFilter
+    permission_classes = [IsAuthenticated]
+
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
