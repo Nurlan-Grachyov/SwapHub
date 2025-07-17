@@ -11,14 +11,14 @@ class ExchangeOffer(models.Model):
     )
 
     ad_sender = models.ForeignKey(
-        to="ads.Product",
+        to="ads.Ad",
         related_name="offered_ads",
         on_delete=models.CASCADE,
         verbose_name=_("Объявление отправителя"),
     )
 
     ad_receiver = models.ForeignKey(
-        to="ads.Product",
+        to="ads.Ad",
         related_name="received_offers",
         on_delete=models.CASCADE,
         verbose_name=_("Объявление получателя"),
@@ -45,7 +45,7 @@ class ExchangeOffer(models.Model):
         choices=STATUS_CHOICES,
         default="pending",
         verbose_name=_("Статус предложения"),
-        blank=True
+        blank=True,
     )
 
     created_at = models.DateTimeField(

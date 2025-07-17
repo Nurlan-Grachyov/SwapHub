@@ -6,13 +6,13 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from ads.filters import AdsFilter
-from ads.models import Product
+from ads.models import Ad
 from ads.paginators import AdsPaginator
 from ads.serializers import AdSerializer
 
 
 class AdsViewSet(ModelViewSet):
-    queryset = Product.objects.all()
+    queryset = Ad.objects.all()
     serializer_class = AdSerializer
     pagination_class = AdsPaginator
     permission_classes = [IsAuthenticated]
@@ -21,11 +21,16 @@ class AdsViewSet(ModelViewSet):
     filterset_class = AdsFilter
 
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data, context={"request": request})
+        """
+        Creates a new advertisement.
+        """
+        serializer = self.get_serializer(
+            data=request.data, context={"request": request}
+        )
         if serializer.is_valid():
             serializer.save()
             response_data = {
-                "message": "Продукт успешно создан!",
+                "message": "Product successfully created!",
                 "data": serializer.data,
             }
             return Response(response_data, status=status.HTTP_201_CREATED)
@@ -33,36 +38,46 @@ class AdsViewSet(ModelViewSet):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def update(self, request, *args, **kwargs):
-        """Обновляет существующее объявление."""
+        """
+        Updates an existing advertisement.
+        """
         product = self.get_object()
 
         if product.user != request.user:
             raise PermissionDenied(
-                detail="У вас нет прав на редактирование этого объявления."
+                detail="You do not have permissions to edit this advertisement."
             )
 
         serializer = self.get_serializer(product, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(
-                {"message": "Объявление успешно обновлено.", "data": serializer.data},
+                {
+                    "message": "Advertisement successfully updated.",
+                    "data": serializer.data,
+                },
                 status=status.HTTP_200_OK,
             )
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def partial_update(self, request, *args, **kwargs):
-        """Частично обновляет объявление."""
+        """
+        Partially updates an advertisement.
+        """
         return self.update(request, *args, **kwargs)
 
     def destroy(self, request, *args, **kwargs):
+        """
+        Deletes an advertisement.
+        """
         product = self.get_object()
         if product.user != request.user:
             raise PermissionDenied(
-                detail="У вас нет прав на удаление этого объявления."
+                detail="You do not have permissions to delete this advertisement."
             )
         product.delete()
         return Response(
-            {"message": "Объявление успешно удалено."},
+            {"message": "Advertisement successfully deleted."},
             status=status.HTTP_204_NO_CONTENT,
         )

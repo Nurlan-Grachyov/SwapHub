@@ -3,7 +3,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 
-class Product(models.Model):
+class Ad(models.Model):
     STATUS_CHOICES = [
         ("new", _("Новый")),
         ("used", _("Бывший в употреблении")),
@@ -12,7 +12,7 @@ class Product(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         verbose_name=_("Пользователь"),
-        blank=True
+        blank=True,
     )
     title = models.CharField(max_length=255, verbose_name=_("Заголовок"))
     description = models.TextField(verbose_name=_("Описание"))
